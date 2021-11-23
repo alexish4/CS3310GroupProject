@@ -48,6 +48,7 @@ public class TSPSortedEdges {
             int count = 0;
             int src = 0;
             int dst = 0;
+            int wt = 0;
             int index = 0;
             // boolean allVisit = true;
             // boolean allVisit = false;
@@ -70,6 +71,7 @@ public class TSPSortedEdges {
                         path.add(currentEdge);
                         src = currentEdge.source;
                         dst = currentEdge.destination;
+                        wt = currentEdge.weight;
                         index = i;
                         totalCost += currentEdge.weight;
                     }
@@ -85,6 +87,7 @@ public class TSPSortedEdges {
                         allEdges.remove(index);
                         visited[src] -= 1;
                         visited[dst] -= 1;
+                        totalCost -= wt;
                         path.remove(count-1);
                         --visit;
                     }
