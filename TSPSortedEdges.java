@@ -46,7 +46,7 @@ public class TSPSortedEdges {
             allEdges = new ArrayList<Edge>(Arrays.asList(edges));
             int visit = 0;
             int count = 0;
-            boolean allVisit = true;
+            // boolean allVisit = true;
             // boolean allVisit = false;
 
             for (int i = 0; i < visited.length; i++) {
@@ -57,7 +57,7 @@ public class TSPSortedEdges {
             // visited[currentEdge.source] += 1;
             // path.add(currentEdge);
 
-            while(allVisit != false) {
+            while(visit != (vertices + 1)) {
                 for (int i = 0; i < allEdges.size(); i++) {
                     currentEdge = allEdges.get(i);
                     if (visited[currentEdge.source] < 2 
@@ -67,18 +67,23 @@ public class TSPSortedEdges {
                         path.add(currentEdge);
                         totalCost += currentEdge.weight;
                     }
-                    for (int j = 0; j < visited.length; j++) {
-                        if (visited[j] == 2) {
-                            count++;
+                    if (visit == 5) {
+                        for (int j = 0; j < visited.length; j++) {
+                            if (visited[j] == 2) {
+                                count++;
+                            }
                         }
-                        if (count == visited.length) {
-                            break;
+                        if (count == 4) {
+                            path.remove(count-1);
+                            visit--;
                         }
                     }
-                    count = 0;
+                    
                 }
                 visit++;
             }
+
+            System.out.println(visit);
 
 
             //Initialize the graph with the first edge
