@@ -4,6 +4,7 @@ import java.util.Comparator;
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
+import java.util.spi.CurrencyNameProvider;
 
 public class TSPSortedEdges {
     static class Edge {
@@ -46,6 +47,10 @@ public class TSPSortedEdges {
             allEdges = new ArrayList<Edge>(Arrays.asList(edges));
             int visit = 0;
             int count = 0;
+            int src = 0;
+            int dst = 0;
+            int wt = 0;
+            int index = 0;
             // boolean allVisit = true;
             // boolean allVisit = false;
 
@@ -65,20 +70,28 @@ public class TSPSortedEdges {
                         visited[currentEdge.source] += 1;
                         visited[currentEdge.destination] += 1;
                         path.add(currentEdge);
+                        src = currentEdge.source;
+                        dst = currentEdge.destination;
+                        wt = currentEdge.weight;
+                        index = i;
                         totalCost += currentEdge.weight;
                     }
-                    if (visit == 5) {
-                        for (int j = 0; j < visited.length; j++) {
-                            if (visited[j] == 2) {
-                                count++;
-                            }
-                        }
-                        if (count == 4) {
-                            path.remove(count-1);
-                            visit--;
+                }
+                if (visit == vertices) {
+                    for (int j = 0; j < visited.length; j++) {
+                        if (visited[j] == 2) {
+                            count++;
                         }
                     }
-                    
+                    if (count < 5) {
+                        System.out.println(src);
+                        // Edge delete = new Edge(src, dst, wt);
+                        allEdges.remove(index);
+                        visited[src] -= 1;
+                        visited[dst] -= 1;
+                        path.remove(count-1);
+                        --visit;
+                    }
                 }
                 visit++;
             }
