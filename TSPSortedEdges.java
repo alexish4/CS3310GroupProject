@@ -38,6 +38,7 @@ public class TSPSortedEdges {
             Edge[] edges = new Edge[allEdges.size()];
             allEdges.toArray(edges);
             Arrays.sort(edges, new SortByCost());
+            allEdges = new ArrayList<Edge>(Arrays.asList(edges));
 
             //Initialize the graph with the first edge
 
@@ -56,8 +57,13 @@ public class TSPSortedEdges {
             allEdges.add(edge); //add to total edges
         }
 
-        public void printPath() {
+        public void printPath(ArrayList<Edge> allEdges) {
             // print the path using sort edges algorithm
+            System.out.print(" Sorted Weight: ");
+            for (int i = 0; i < allEdges.size(); i++) {
+                Edge edge = allEdges.get(i);
+                System.out.print(edge.weight + " ");
+            }
         }
 
     }
