@@ -48,6 +48,7 @@ public class TSPSortedEdges {
             // 1. make sure the city is not visted 3 time
             // 2. make sure the all city is visited before
             //    a circuit is formed
+            printPath(allEdges);
         }
 
         // Function that add edges from input file
@@ -57,15 +58,14 @@ public class TSPSortedEdges {
             allEdges.add(edge); //add to total edges
         }
 
-        public void printPath(ArrayList<Edge> allEdges) {
+        public void printPath(ArrayList<Edge> edgeList) {
             // print the path using sort edges algorithm
-            System.out.print(" Sorted Weight: ");
+            System.out.print("Sorted Weight: ");
             for (int i = 0; i < allEdges.size(); i++) {
                 Edge edge = allEdges.get(i);
                 System.out.print(edge.weight + " ");
             }
         }
-
     }
 
     public static void main(String[] args) throws IOException {
@@ -91,6 +91,9 @@ public class TSPSortedEdges {
 
             // Close scanner
             sc.close();
+
+            graph.sortedEdges();
+
         } catch (IOException e) {
 
             // Catch exception if file doesn't exist
