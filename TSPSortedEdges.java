@@ -29,16 +29,49 @@ public class TSPSortedEdges {
     static class Graph {
         int vertices;
         ArrayList<Edge> allEdges = new ArrayList<>();
+        ArrayList<Edge> path = new ArrayList<>();
+        int visited[];
+        int totalCost;
+        Edge currentEdge;
 
         Graph(int vertices) {
             this.vertices = vertices;
         }
 
         public void sortedEdges() {
+            visited = new int[vertices + 1];
             Edge[] edges = new Edge[allEdges.size()];
             allEdges.toArray(edges);
             Arrays.sort(edges, new SortByCost());
             allEdges = new ArrayList<Edge>(Arrays.asList(edges));
+            int visit = 0;
+
+            for (int i = 0; i < visited.length; i++) {
+                visited[i] = 0;
+            }
+
+            // currentEdge = allEdges.get(0);
+            // visited[currentEdge.source] += 1;
+            // path.add(currentEdge);
+
+            while(visit <= vertices) {
+                for (int i = 0; i < allEdges.size(); i++) {
+                    currentEdge = allEdges.get(i);
+                    if (visited[currentEdge.source] < 2 
+                        && visited[currentEdge.destination] < 2) {
+                        Edge check = new Edge(currentEdge.source, 
+                                                currentEdge.destination, 
+                                                currentEdge.weight);
+                        if (!path.contains(check)) {
+                            visited[currentEdge.source] += 1;
+                            visited[currentEdge.destination] += 1;
+                            path.add(currentEdge);
+                            totalCost += currentEdge.weight;
+                        }
+                    }
+                    visit++;
+                }
+            }
 
             //Initialize the graph with the first edge
 
@@ -48,7 +81,7 @@ public class TSPSortedEdges {
             // 1. make sure the city is not visted 3 time
             // 2. make sure the all city is visited before
             //    a circuit is formed
-            printPath(allEdges);
+            printPath(path);
         }
 
         // Function that add edges from input file
@@ -60,12 +93,16 @@ public class TSPSortedEdges {
 
         public void printPath(ArrayList<Edge> edgeList) {
             // print the path using sort edges algorithm
-            System.out.print("Sorted Weight: ");
-            for (int i = 0; i < allEdges.size(); i++) {
-                Edge edge = allEdges.get(i);
-                System.out.print(edge.weight + " ");
+            System.out.print("Sorted Weight: \n");
+            for (int i = 0; i < edgeList.size(); i++) {
+                Edge edge = edgeList.get(i);
+                System.out.print(edge.source + "-->" + edge.destination
+                                + ": " + edge.weight);
+                System.out.println();
             }
+            System.out.println("Total Cost: " + totalCost);
         }
+
     }
 
     public static void main(String[] args) throws IOException {
