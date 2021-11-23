@@ -4,7 +4,6 @@ import java.util.Comparator;
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
-import java.util.spi.CurrencyNameProvider;
 
 public class TSPSortedEdges {
     static class Edge {
@@ -49,7 +48,6 @@ public class TSPSortedEdges {
             int count = 0;
             int src = 0;
             int dst = 0;
-            int wt = 0;
             int index = 0;
             // boolean allVisit = true;
             // boolean allVisit = false;
@@ -72,7 +70,6 @@ public class TSPSortedEdges {
                         path.add(currentEdge);
                         src = currentEdge.source;
                         dst = currentEdge.destination;
-                        wt = currentEdge.weight;
                         index = i;
                         totalCost += currentEdge.weight;
                     }
@@ -83,9 +80,8 @@ public class TSPSortedEdges {
                             count++;
                         }
                     }
-                    if (count < 5) {
+                    if (count < vertices) {
                         System.out.println(src);
-                        // Edge delete = new Edge(src, dst, wt);
                         allEdges.remove(index);
                         visited[src] -= 1;
                         visited[dst] -= 1;
@@ -98,15 +94,6 @@ public class TSPSortedEdges {
 
             System.out.println(visit);
 
-
-            //Initialize the graph with the first edge
-
-            //Select the next cheapest path
-
-            //While selecting the next cheapest path check 2 condition: 
-            // 1. make sure the city is not visted 3 time
-            // 2. make sure the all city is visited before
-            //    a circuit is formed
             printPath(path);
         }
 
