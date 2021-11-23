@@ -45,6 +45,8 @@ public class TSPSortedEdges {
             Arrays.sort(edges, new SortByCost());
             allEdges = new ArrayList<Edge>(Arrays.asList(edges));
             int visit = 0;
+            int count = 0;
+            boolean allVisit = true;
             // boolean allVisit = false;
 
             for (int i = 0; i < visited.length; i++) {
@@ -55,24 +57,27 @@ public class TSPSortedEdges {
             // visited[currentEdge.source] += 1;
             // path.add(currentEdge);
 
-            while(visit < vertices) {
+            while(allVisit != false) {
                 for (int i = 0; i < allEdges.size(); i++) {
                     currentEdge = allEdges.get(i);
                     if (visited[currentEdge.source] < 2 
                         && visited[currentEdge.destination] < 2) {
-                        Edge check = new Edge(currentEdge.source, 
-                                                currentEdge.destination, 
-                                                currentEdge.weight);
-                        if (!path.contains(check)) {
-                            visited[currentEdge.source] += 1;
-                            visited[currentEdge.destination] += 1;
-                            path.add(currentEdge);
-                            totalCost += currentEdge.weight;
+                        visited[currentEdge.source] += 1;
+                        visited[currentEdge.destination] += 1;
+                        path.add(currentEdge);
+                        totalCost += currentEdge.weight;
+                    }
+                    for (int j = 0; j < visited.length; j++) {
+                        if (visited[j] == 2) {
+                            count++;
+                        }
+                        if (count == visited.length) {
+                            break;
                         }
                     }
-                    visit++;
+                    count = 0;
                 }
-                // visit++;
+                visit++;
             }
 
 
