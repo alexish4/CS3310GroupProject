@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.Scanner;
 
 public class TSPSortedEdges {
+
+    // Static class for edge
     static class Edge {
         int source;
         int destination;
@@ -18,6 +20,17 @@ public class TSPSortedEdges {
         }
     }
 
+    // Static class for city
+    static class City {
+        String cityName;
+
+        public City(String cityName) {
+            this.cityName = cityName;
+        }
+    }
+
+    // A Static class that can be use to sort 
+    //  arrays from smallest to biggest
     static class SortByCost implements Comparator<Edge> {
         public int compare(Edge a, Edge b) {
             if ( a.weight < b.weight ) return -1;
@@ -26,10 +39,12 @@ public class TSPSortedEdges {
         }
     }
 
+    // Static class for the graph
     static class Graph {
         int vertices;
         ArrayList<Edge> allEdges = new ArrayList<>();
         ArrayList<Edge> path = new ArrayList<>();
+        ArrayList<City> allCities = new ArrayList<>();
         int visited[];
         int totalCost;
         Edge currentEdge;
@@ -38,56 +53,64 @@ public class TSPSortedEdges {
             this.vertices = vertices;
         }
 
+        // A function that use the sorted edges algorithm
+        //  to find a hamiltonian circuit
         public void sortedEdges() {
+            //Keep track of visited city
             visited = new int[vertices + 1];
+
+            // Using SortByCost class to sort the arrays
             Edge[] edges = new Edge[allEdges.size()];
             allEdges.toArray(edges);
             Arrays.sort(edges, new SortByCost());
-            allEdges = new ArrayList<Edge>(Arrays.asList(edges));
-            int visit = 0;
-            int count = 0;
-            int src = 0;
-            int dst = 0;
-            int wt = 0;
-            int index = 0;
-            // boolean allVisit = true;
-            // boolean allVisit = false;
 
+            // Copy the array into a Array list
+            allEdges = new ArrayList<Edge>(Arrays.asList(edges));
+
+            // Variables that keep count
+            int visit, count, currentSRC, currentDST, currentWT, index;
+            visit = count = currentSRC = currentDST = currentWT = index = 0;
+
+            // Initialize all city visited to 0
             for (int i = 0; i < visited.length; i++) {
                 visited[i] = 0;
             }
 
-            // currentEdge = allEdges.get(0);
-            // visited[currentEdge.source] += 1;
-            // path.add(currentEdge);
-
+            // While loop until all city is visit
             while(visit != (vertices + 1)) {
                 for (int i = 0; i < allEdges.size(); i++) {
                     currentEdge = allEdges.get(i);
+                    
+                    // Check whether a city is visited twice
                     if (visited[currentEdge.source] < 2 
                         && visited[currentEdge.destination] < 2) {
                         visited[currentEdge.source] += 1;
                         visited[currentEdge.destination] += 1;
                         path.add(currentEdge);
-                        src = currentEdge.source;
-                        dst = currentEdge.destination;
-                        wt = currentEdge.weight;
+                        currentSRC = currentEdge.source;
+                        currentDST = currentEdge.destination;
+                        currentWT = currentEdge.weight;
                         index = i;
                         totalCost += currentEdge.weight;
                     }
                 }
+
+                // Check if all city is visited twice
                 if (visit == vertices) {
                     for (int j = 0; j < visited.length; j++) {
                         if (visited[j] == 2) {
                             count++;
                         }
                     }
+
+                    // If not all city is visited move to
+                    //  the next cheapest edge
                     if (count < vertices) {
-                        System.out.println(src);
+                        System.out.println(currentSRC);
                         allEdges.remove(index);
-                        visited[src] -= 1;
-                        visited[dst] -= 1;
-                        totalCost -= wt;
+                        visited[currentSRC] -= 1;
+                        visited[currentDST] -= 1;
+                        totalCost -= currentWT;
                         path.remove(count-1);
                         --visit;
                     }
@@ -95,8 +118,7 @@ public class TSPSortedEdges {
                 visit++;
             }
 
-            System.out.println(visit);
-
+            // Display result
             printPath(path);
         }
 
@@ -104,26 +126,39 @@ public class TSPSortedEdges {
         public void addEdge(int source, int destination, int weight) {
 
             Edge edge = new Edge(source, destination, weight);
-            allEdges.add(edge); //add to total edges
+            allEdges.add(edge); // add to Array list
         }
 
+        // Function that add city from input file
+        public void addCity(String cityName) {
+            City city = new City(cityName);
+            allCities.add(city); // add to Array list
+        }
+
+        // Function that print out Hamiltonian Circuit
         public void printPath(ArrayList<Edge> edgeList) {
-            // print the path using sort edges algorithm
-            System.out.print("Sorted Weight: \n");
+
+            // Print the path using sort edges algorithm
+            System.out.print("\nHamiltonian Circuit Using Sorted Edges: \n\n");
             for (int i = 0; i < edgeList.size(); i++) {
                 Edge edge = edgeList.get(i);
-                System.out.print(edge.source + "-->" + edge.destination
+                City begin = allCities.get(edge.source);
+                City end = allCities.get(edge.destination);
+                System.out.print(begin.cityName + " --> " + end.cityName
                                 + ": " + edge.weight);
-                System.out.println();
+                System.out.println("\n");
             }
-            System.out.println("Total Cost: " + totalCost);
+            System.out.println("\nTotal Cost: " + totalCost);
         }
 
     }
 
     public static void main(String[] args) throws IOException {
+
         // Declare int variables
         int vertices, tmpV1, tmpV2, weight;
+        String[] tmpCity;
+        String[] line;
         
         // Retrieving data from input file and pass into graph
         try {
@@ -134,8 +169,13 @@ public class TSPSortedEdges {
 
             Graph graph = new Graph(vertices);
 
+            tmpCity = sc.nextLine().split(",");
+            for (int i = 0; i < tmpCity.length; i++) {
+                graph.addCity(tmpCity[i]);
+            }
+
             while (sc.hasNextLine()) {
-                String[] line = sc.nextLine().split(" ");
+                line = sc.nextLine().split(" ");
                 tmpV1 = Integer.parseInt(line[0]);
                 tmpV2 = Integer.parseInt(line[1]);
                 weight = Integer.parseInt(line[2]);
